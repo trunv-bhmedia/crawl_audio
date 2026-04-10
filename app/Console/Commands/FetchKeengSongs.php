@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\SongController;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class FetchKeengSongs extends Command
 {
