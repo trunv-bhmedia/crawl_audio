@@ -3,7 +3,6 @@
 ## 1. Công nghệ sử dụng
 - Framework: Laravel 10.x.
 - Frontend: Blade Template + Tailwind CSS.
-- Crawling Libraries: Sử dụng thư viện phù hợp với từng trường hợp, Ưu tiên sử dụng `spatie/browsershot` (nếu cần render JS) hoặc `symfony/dom-crawler` và `guzzlehttp/guzzle` (cho HTML tĩnh).
 - Database: MySQL để lưu trữ dữ liệu crawl.
 - sử dụng những công nghệ phù hợp với từng trường hợp và được laravel hỗ trợ.
 

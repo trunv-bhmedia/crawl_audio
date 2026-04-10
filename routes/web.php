@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SongController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('crawled-audio-cms.index');
+})->name('crawled-audio-cms.index');
+
+Route::prefix('songs')->group(function () {
+    Route::get('/fetch', [SongController::class, 'fetchSongs'])->name('songs.fetch');
+    Route::get('/sync/hot', [SongController::class, 'syncSongHot'])->name('songs.sync.hot');
+    Route::get('/sync/new', [SongController::class, 'syncSongNew'])->name('songs.sync.new');
+    Route::get('/sync/all', [SongController::class, 'syncSongHotAndNew'])->name('songs.sync.all');
 });
