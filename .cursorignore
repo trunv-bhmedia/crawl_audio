@@ -1,0 +1,7 @@
+# Tránh quét thư viện và build
+node_modules/
+dist/
+build/
+.next/
+.venv/
+vendor/

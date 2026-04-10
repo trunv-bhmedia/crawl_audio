@@ -1,0 +1,32 @@
+# Laravel 10 Crawling Project Rules
+
+## 1. Công nghệ sử dụng
+- Framework: Laravel 10.x.
+- Frontend: Blade Template + Tailwind CSS.
+- Crawling Libraries: Sử dụng thư viện phù hợp với từng trường hợp, Ưu tiên sử dụng `spatie/browsershot` (nếu cần render JS) hoặc `symfony/dom-crawler` và `guzzlehttp/guzzle` (cho HTML tĩnh).
+- Database: MySQL để lưu trữ dữ liệu crawl.
+- sử dụng những công nghệ phù hợp với từng trường hợp và được laravel hỗ trợ.
+
+## 2. Quy tắc lập trình (Coding Standards)
+- Ngôn ngữ: Trả lời và comment bằng tiếng Việt.
+- Controller: Sử dụng Single Responsibility Principle. Các logic crawl phức tạp phải viết trong `App\Services`.
+- Error Handling: Luôn sử dụng try-catch khi crawl để xử lý lỗi kết nối hoặc thay đổi cấu trúc HTML của web đích. Log lỗi vào `Storage::log`.
+- Performance: 
+    - Luôn gợi ý sử dụng `Laravel Queue` (Job) khi crawl số lượng lớn để tránh timeout.
+    - Sử dụng `LazyCollection` khi xử lý file dữ liệu lớn.
+
+## 3. Quy tắc Crawl Data
+- Sử dụng các trang web đích đã được cung cấp (https://keeng.vn/ và https://imuzik.vn/).
+- Khi crawl data, phải crawl toàn bộ trang web đích.
+- Luôn kiểm tra tính tồn tại của Selector trước khi trích xuất dữ liệu.
+- Giả lập User-Agent để tránh bị chặn (Sử dụng các Header phổ biến của Chrome/Firefox).
+- Nếu web đích có phân trang, hãy ưu tiên giải pháp duyệt qua từng trang (Pagination crawling).
+
+## 4. Giao diện (Tailwind CSS)
+- Ưu tiên giao diện tối giản, tập trung vào bảng (Table) hoặc thẻ (Card) để hiển thị dữ liệu.
+- Sử dụng màu sắc: Blue-600 cho Action, Red-500 cho Error, Green-500 cho Success.
+- Đảm bảo tính Responsive cho thiết bị di động.
+
+## 5. Bảo mật & Tài nguyên
+- Không lưu trữ thông tin nhạy cảm vào code, luôn dùng file `.env`.
+- Thêm khoảng nghỉ giữa các lần request (Sleep/Delay) để không làm treo server đối phương.
