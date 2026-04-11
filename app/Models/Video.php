@@ -18,5 +18,4 @@ class Video extends Model
         'name_singer',
         'image',
     ];
-    
 }
