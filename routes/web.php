@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CrawledAudioCmsController;
 use App\Http\Controllers\FetchKengController;
-use App\Http\Controllers\SongController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('crawled-audio-cms.index');
-})->name('crawled-audio-cms.index');
+Route::get('/', [CrawledAudioCmsController::class, 'index'])->name('crawled-audio-cms.index');
+Route::get('/crawl-cms/download', [CrawledAudioCmsController::class, 'download'])->name('crawled-audio-cms.download');
+Route::get('/crawl-cms/download-zip', [CrawledAudioCmsController::class, 'downloadZip'])->name('crawled-audio-cms.download-zip');
 
 Route::get('/test', [FetchKengController::class, 'fetchSongs']);

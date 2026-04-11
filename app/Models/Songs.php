@@ -14,6 +14,7 @@ class Songs extends Model
         'slug',
         'name',
         'download_url',
+        'download_url_web',
         'image_url',
         'singer_id',
         'name_singer',

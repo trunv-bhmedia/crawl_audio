@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('slug')->nullable()->comment('URL slug của video');
             $table->string('name')->nullable()->comment('tên video');
             $table->text('download_url')->nullable()->comment('URL tải video');
+            $table->text('download_url_web')->nullable()->comment('URL tải video web');
             $table->string('singer_id')->nullable()->comment('id ca sĩ');
             $table->string('name_singer')->nullable()->comment('tên ca sĩ');
-            $table->text('image')->nullable()->comment('ảnh thumbnail video');
+            $table->text('image_url')->nullable()->comment('ảnh thumbnail video');
             $table->timestamps();
         });
     }

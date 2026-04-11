@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Songs;
 use App\Models\Video;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +21,7 @@ class FetchKengController extends Controller
                     'https://vipservice.keeng.vn/KeengWSRestful/ws/common/getListSongNewV4',
                 ],
                 'model' => Songs::class,
-                'map'   => 'mapSongData',
+                'map' => 'mapSongData',
             ],
             'video' => [
                 'endpoints' => [
@@ -30,7 +29,7 @@ class FetchKengController extends Controller
                     'https://vipservice.keeng.vn/KeengWSRestful/ws/common/getListVideoNewV4',
                 ],
                 'model' => Video::class,
-                'map'   => 'mapVideoData',
+                'map' => 'mapVideoData',
             ],
         ];
     }
@@ -40,22 +39,24 @@ class FetchKengController extends Controller
     public function fetchSongs(): JsonResponse
     {
         $config = $this->getEndpointConfig()['song'];
+
         return $this->fetchMedia($config);
     }
 
     public function fetchVideos(): JsonResponse
     {
         $config = $this->getEndpointConfig()['video'];
+
         return $this->fetchMedia($config);
     }
 
     public function fetchAllKeeng(): JsonResponse
     {
-        $songResult  = json_decode($this->fetchSongs()->getContent(),  true);
+        $songResult = json_decode($this->fetchSongs()->getContent(), true);
         $videoResult = json_decode($this->fetchVideos()->getContent(), true);
 
         return response()->json([
-            'songs'  => $songResult,
+            'songs' => $songResult,
             'videos' => $videoResult,
         ]);
     }
@@ -65,7 +66,7 @@ class FetchKengController extends Controller
     private function fetchMedia(array $config): JsonResponse
     {
         $inserted = 0;
-        $updated  = 0;
+        $updated = 0;
 
         // Chạy tuần tự qua từng endpoint trong config
         foreach ($config['endpoints'] as $url) {
@@ -74,18 +75,20 @@ class FetchKengController extends Controller
             while (true) {
                 $response = Http::timeout(15)->get($url, [
                     'page' => $page,
-                    'num'  => $this->perPage,
+                    'num' => $this->perPage,
                 ]);
 
                 if ($response->failed()) {
-                    Log::warning("Keeng API failed", ['url' => $url, 'page' => $page]);
+                    Log::warning('Keeng API failed', ['url' => $url, 'page' => $page]);
                     break;
                 }
 
-                $body  = $response->json();
+                $body = $response->json();
                 $items = $body['data'] ?? $body['result'] ?? [];
 
-                if (empty($items)) break;
+                if (empty($items)) {
+                    break;
+                }
 
                 $mappedItems = array_map([$this, $config['map']], $items);
                 $this->saveData($mappedItems, $config['model'], $inserted, $updated);
@@ -97,7 +100,7 @@ class FetchKengController extends Controller
 
         return response()->json([
             'inserted' => $inserted,
-            'updated'  => $updated,
+            'updated' => $updated,
         ]);
     }
 
@@ -109,7 +112,9 @@ class FetchKengController extends Controller
 
         foreach ($items as $item) {
             $identify = $item['identify'] ?? null;
-            if (!$identify || isset($seen[$identify])) continue;
+            if (! $identify || isset($seen[$identify])) {
+                continue;
+            }
             $seen[$identify] = true;
 
             $exists = $model::where('identify', $identify)->exists();
@@ -131,36 +136,41 @@ class FetchKengController extends Controller
     {
         $identify = $item['info_extra']['identify'] ?? $item['identify'] ?? null;
         $lyric = null;
-        if (!empty($item['lyric'])) {
+        if (! empty($item['lyric'])) {
             $lyric = trim(html_entity_decode(strip_tags($item['lyric']), ENT_QUOTES, 'UTF-8'));
         }
+
         return [
-            'identify'    => $identify,
-            'slug'        => $item['slug'] ?? null,
-            'name'        => $item['name'] ?? null,
-            'download_url'=> $item['download_url_web'] ?? $item['download_url'] ?? null,
-            'image_url'   => $item['image310'] ?? $item['image'] ?? null,
-            'singer_id'   => $item['singer_id'] ?? null,
+            'identify' => $identify,
+            'slug' => $item['slug'] ?? null,
+            'name' => $item['name'] ?? null,
+            'download_url_web' => $item['download_url_web'] ?? null,
+            'download_url' => $item['download_url'] ?? null,
+            'image_url' => $item['image310'] ?? $item['image'] ?? null,
+            'singer_id' => $item['singer_id'] ?? null,
             'name_singer' => $item['singer'] ?? null,
-            'album_id'    => $item['album_id'] ?? null,
+            'album_id' => $item['album_id'] ?? null,
             'author_name' => $item['info_extra']['author_name'] ?? null,
-            'lyric'       => $lyric,
+            'lyric' => $lyric,
         ];
     }
 
     private function mapVideoData(array $item): array
     {
         $identify = $item['info_extra']['identify'] ?? $item['identify'] ?? null;
+        $slug = $item['info_extra']['slug'] ?? $item['slug'] ?? null;
+
         return [
-            'identify'     => $identify,
-            'slug'         => $item['slug'] ?? null,
-            'name'         => $item['name'] ?? null,
-            'download_url' => $item['download_url_web'] ?? $item['download_url'] ?? null,
-            'image_url'    => $item['image310'] ?? $item['image'] ?? null,
-            'singer_id'    => $item['singer_id'] ?? null,
-            'name_singer'  => $item['singer'] ?? null,
-            'song_identify'=> $item['song_identify'] ?? null,
-            'is_active'    => $item['is_active'] ?? true,
+            'identify' => $identify,
+            'slug' => $slug,
+            'name' => $item['name'] ?? null,
+            'download_url_web' => $item['download_url_web'] ?? null,
+            'download_url' => $item['download_url'] ?? null,
+            'image_url' => $item['image310'] ?? $item['image'] ?? null,
+            'singer_id' => $item['singer_id'] ?? null,
+            'name_singer' => $item['singer'] ?? null,
+            'song_identify' => $item['song_identify'] ?? null,
+            'is_active' => $item['is_active'] ?? true,
         ];
     }
 }

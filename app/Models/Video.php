@@ -14,8 +14,9 @@ class Video extends Model
         'slug',
         'name',
         'download_url',
+        'download_url_web',
         'singer_id',
         'name_singer',
-        'image',
+        'image_url',
     ];
 }

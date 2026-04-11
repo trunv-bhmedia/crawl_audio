@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->string('name')->nullable();
             $table->text('download_url')->nullable();
+            $table->text('download_url_web')->nullable();
             $table->string('image_url')->nullable();
             $table->string('singer_id')->nullable();
             $table->string('name_singer')->nullable();
